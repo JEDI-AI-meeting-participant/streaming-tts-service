@@ -1,30 +1,30 @@
 # Streaming TTS Service
 
-基于 Coze WebSocket API 的流式文本转语音微服务。
+Streaming text-to-speech microservice based on Coze WebSocket API.
 
-## 功能特性
+## Features
 
-- **流式语音合成**: 基于 Coze WebSocket API 实现实时语音合成
-- **高性能**: 支持并发请求和流式音频传输
-- **容器友好**: 支持 Docker 部署和 Kubernetes 编排
+- **Streaming Speech Synthesis**: Real-time speech synthesis based on Coze WebSocket API
+- **High Performance**: Support for concurrent requests and streaming audio transmission
+- **Container Friendly**: Support for Docker deployment and Kubernetes orchestration
 
-## 快速开始
+## Quick Start
 
-### 安装依赖
+### Install Dependencies
 
 ```bash
 npm install
 ```
 
-### 环境配置
+### Environment Configuration
 
-复制环境变量模板并配置：
+Copy environment variable template and configure:
 
 ```bash
 cp .env.example .env
 ```
 
-编辑 `.env` 文件，配置必需的环境变量：
+Edit the `.env` file to configure required environment variables:
 
 ```env
 # Coze API 配置（必需）
@@ -38,13 +38,13 @@ NODE_ENV=development
 # 其他配置项请参考 .env.example
 ```
 
-### 启动服务
+### Start Service
 
 ```bash
-# 开发模式
+# Development mode
 npm run dev
 
-# 生产模式
+# Production mode
 npm run build
 npm start
 ```
@@ -56,13 +56,13 @@ npm start
 - **Base URL**: `http://localhost:3004`
 - **Content-Type**: `application/json`
 
-### 端点列表
+### Endpoint List
 
-#### 1. 语音合成
+#### 1. Speech Synthesis
 
 **POST** `/api/tts/synthesize`
 
-将文本转换为语音文件。
+Convert text to speech file.
 
 **请求体**:
 ```json
@@ -74,17 +74,17 @@ npm start
 }
 ```
 
-**响应**: 音频文件 (`audio/wav`)
+**Response**: Audio file (`audio/wav`)
 
-#### 2. 流式语音合成
+#### 2. Streaming Speech Synthesis
 
 **POST** `/api/tts/synthesize-stream`
 
-使用 Server-Sent Events 进行流式语音合成。
+Streaming speech synthesis using Server-Sent Events.
 
-**请求体**: 同上
+**Request Body**: Same as above
 
-**响应**: Server-Sent Events 流
+**Response**: Server-Sent Events stream
 
 ```
 data: {"type":"connected","sessionId":"test-123"}
@@ -94,23 +94,23 @@ data: {"type":"audioChunk","sessionId":"test-123","data":"base64-audio-data"}
 data: {"type":"complete","sessionId":"test-123","totalSize":12345}
 ```
 
-#### 3. 停止合成
+#### 3. Stop Synthesis
 
 **POST** `/api/tts/stop`
 
-停止当前正在进行的语音合成。
+Stop current ongoing speech synthesis.
 
-#### 4. 服务状态
+#### 4. Service Status
 
 **GET** `/api/tts/status`
 
-获取 TTS 服务的当前状态。
+Get current status of TTS service.
 
-#### 5. 更新配置
+#### 5. Update Configuration
 
 **PUT** `/api/tts/config`
 
-动态更新 TTS 服务配置。
+Dynamically update TTS service configuration.
 
 **请求体**:
 ```json
@@ -121,42 +121,42 @@ data: {"type":"complete","sessionId":"test-123","totalSize":12345}
 }
 ```
 
-## 使用示例
+## Usage Examples
 
-### cURL 示例
+### cURL Examples
 
 ```bash
-# 语音合成
+# Speech synthesis
 curl -X POST http://localhost:3004/api/tts/synthesize \
   -H "Content-Type: application/json" \
-  -d '{"text":"你好世界"}' \
+  -d '{"text":"Hello World"}' \
   --output output.wav
 
-# 获取服务状态
+# Get service status
 curl http://localhost:3004/api/tts/status
 ```
 
-## 配置说明
+## Configuration
 
-### 环境变量
+### Environment Variables
 
-| 变量名 | 必需 | 默认值 | 说明 |
-|--------|------|--------|------|
-| `COZE_API_TOKEN` | ✅ | - | Coze API 访问令牌 |
-| `COZE_VOICE_ID` | ✅ | - | Coze 语音 ID |
-| `PORT` | ❌ | 3004 | 服务端口 |
-| `NODE_ENV` | ❌ | development | 运行环境 |
+| Variable | Required | Default | Description |
+|----------|----------|---------|-------------|
+| `COZE_API_TOKEN` | ✅ | - | Coze API access token |
+| `COZE_VOICE_ID` | ✅ | - | Coze voice ID |
+| `PORT` | ❌ | 3004 | Service port |
+| `NODE_ENV` | ❌ | development | Runtime environment |
 | `COZE_WS_URL` | ❌ | wss://ws.coze.cn | Coze WebSocket URL |
-| `AUDIO_SAMPLE_RATE` | ❌ | 24000 | 音频采样率 |
-| `AUDIO_CHANNELS` | ❌ | 1 | 音频声道数 |
-| `AUDIO_SPEED` | ❌ | 1.0 | 默认语速 |
-| `AUDIO_FORMAT` | ❌ | pcm | 音频格式 |
-| `CORS_ORIGIN` | ❌ | http://localhost:3000 | CORS 允许的源 |
-| `LOG_LEVEL` | ❌ | info | 日志级别 |
+| `AUDIO_SAMPLE_RATE` | ❌ | 24000 | Audio sample rate |
+| `AUDIO_CHANNELS` | ❌ | 1 | Audio channels |
+| `AUDIO_SPEED` | ❌ | 1.0 | Default speech speed |
+| `AUDIO_FORMAT` | ❌ | pcm | Audio format |
+| `CORS_ORIGIN` | ❌ | http://localhost:3000 | CORS allowed origin |
+| `LOG_LEVEL` | ❌ | info | Log level |
 
-## 开发指南
+## Development Guide
 
-### 项目结构
+### Project Structure
 
 ```
 src/
@@ -170,21 +170,21 @@ src/
 └── server.ts        # 服务器启动
 ```
 
-## 部署
+## Deployment
 
-### Docker 部署
+### Docker Deployment
 
 ```bash
-# 构建镜像
+# Build image
 docker build -t streaming-tts-service .
 
-# 运行容器
+# Run container
 docker run -p 3004:3004 \
   -e COZE_API_TOKEN=your_token \
   -e COZE_VOICE_ID=your_voice_id \
   streaming-tts-service
 ```
 
-### Kubernetes 部署
+### Kubernetes Deployment
 
-参考 `k8s/` 目录下的配置文件。
+Refer to configuration files in the `k8s/` directory.
