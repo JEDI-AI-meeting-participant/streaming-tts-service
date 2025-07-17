@@ -27,15 +27,12 @@ cp .env.example .env
 Edit the `.env` file to configure required environment variables:
 
 ```env
-# Coze API 配置（必需）
 COZE_API_TOKEN=your_coze_api_token
 COZE_VOICE_ID=your_voice_id
-
-# 服务配置
 PORT=3004
 NODE_ENV=development
 
-# 其他配置项请参考 .env.example
+# plz refer to.env.example for more 
 ```
 
 ### Start Service
@@ -49,9 +46,9 @@ npm run build
 npm start
 ```
 
-## API 接口
+## API
 
-### 基础信息
+### BASIC INFORMATION
 
 - **Base URL**: `http://localhost:3004`
 - **Content-Type**: `application/json`
@@ -64,10 +61,10 @@ npm start
 
 Convert text to speech file.
 
-**请求体**:
+**EXAMPLE**:
 ```json
 {
-  "text": "你好，这是一个测试文本。",
+  "text": "Hello, this is a test.",
   "sessionId": "optional-session-id",
   "voiceId": "optional-voice-id",
   "speed": 1.0
@@ -112,7 +109,7 @@ Get current status of TTS service.
 
 Dynamically update TTS service configuration.
 
-**请求体**:
+**EXAMPLE**:
 ```json
 {
   "voiceId": "new-voice-id",
@@ -160,14 +157,14 @@ curl http://localhost:3004/api/tts/status
 
 ```
 src/
-├── config/           # 配置管理
-├── controllers/      # 控制器
-├── middleware/       # 中间件
-├── routes/          # 路由定义
-├── services/        # 业务服务
-├── utils/           # 工具函数
-├── app.ts           # 应用程序
-└── server.ts        # 服务器启动
+├── config/           
+├── controllers/     
+├── middleware/      
+├── routes/          
+├── services/       
+├── utils/           
+├── app.ts           
+└── server.ts       
 ```
 
 ## Deployment
