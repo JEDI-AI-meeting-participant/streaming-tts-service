@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: streaming-tts-config
+  namespace: default
+  labels:
+    app: streaming-tts-service
+data:
+  NODE_ENV: "production"
+  PORT: "3004"
+  COZE_WEBSOCKET_URL: "wss://api.coze.cn/v1/audio/speech"
+  AUDIO_FORMAT: "mp3"
+  AUDIO_SAMPLE_RATE: "24000"
+  AUDIO_SPEED: "1.0"
+  LOG_LEVEL: "info"
+  CORS_ORIGIN: "*"
+  # Health check configuration
+  HEALTH_CHECK_TIMEOUT: "5000"
+  # WebSocket configuration
+  WS_CONNECTION_TIMEOUT: "30000"
+  WS_PING_INTERVAL: "30000"
+  WS_RECONNECT_ATTEMPTS: "3"
+  WS_RECONNECT_DELAY: "1000"
+  # Rate limiting
+  RATE_LIMIT_WINDOW_MS: "900000"
+  RATE_LIMIT_MAX_REQUESTS: "100"
+  # Performance tuning
+  MAX_CONCURRENT_REQUESTS: "10"
+  REQUEST_TIMEOUT: "30000"
+  # Audio processing
+  MAX_TEXT_LENGTH: "5000"
+  CHUNK_SIZE: "1024"
+  # Security
+  ENABLE_CORS: "true"
+  ENABLE_HELMET: "true"
+  ENABLE_COMPRESSION: "true"

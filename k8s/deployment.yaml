@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: streaming-tts-service
+  namespace: default
+  labels:
+    app: streaming-tts-service
+    version: v1
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: streaming-tts-service
+  template:
+    metadata:
+      labels:
+        app: streaming-tts-service
+        version: v1
+    spec:
+      containers:
+      - name: streaming-tts-service
+        image: streaming-tts-service:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 3004
+          name: http
+        envFrom:
+        - configMapRef:
+            name: streaming-tts-config
+        env:
+        - name: COZE_API_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: streaming-tts-secrets
+              key: coze-api-token
+        - name: COZE_VOICE_ID
+          valueFrom:
+            secretKeyRef:
+              name: streaming-tts-secrets
+              key: coze-voice-id
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "200m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /health/liveness
+            port: 3004
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /health/readiness
+            port: 3004
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: streaming-tts-secrets
+  namespace: default
+type: Opaque
+data:
+  # Base64 encoded values - replace with actual values
+  # echo -n "your-coze-api-token" | base64
+  coze-api-token: eW91ci1jb3plLWFwaS10b2tlbg==
+  # echo -n "your-voice-id" | base64
+  coze-voice-id: eW91ci12b2ljZS1pZA==

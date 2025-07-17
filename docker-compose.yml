@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  streaming-tts-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: streaming-tts-service:latest
+    container_name: streaming-tts-service
+    ports:
+      - "3004:3004"
+    environment:
+      - NODE_ENV=production
+      - PORT=3004
+      - COZE_API_TOKEN=${COZE_API_TOKEN}
+      - COZE_WEBSOCKET_URL=wss://api.coze.cn/v1/audio/speech
+      - COZE_VOICE_ID=${COZE_VOICE_ID}
+      - AUDIO_FORMAT=mp3
+      - AUDIO_SAMPLE_RATE=24000
+      - AUDIO_SPEED=1.0
+      - LOG_LEVEL=info
+      - CORS_ORIGIN=*
+      - RATE_LIMIT_WINDOW_MS=900000
+      - RATE_LIMIT_MAX_REQUESTS=100
+      - HEALTH_CHECK_TIMEOUT=5000
+      - WS_CONNECTION_TIMEOUT=30000
+      - WS_PING_INTERVAL=30000
+      - MAX_CONCURRENT_REQUESTS=10
+    volumes:
+      - ./logs:/app/logs
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3004/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) }).on('error', () => process.exit(1))"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - tts-network
+
+networks:
+  tts-network:
+    driver: bridge
+
+volumes:
+  logs:
+    driver: local
